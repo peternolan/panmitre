@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--  -->
+<p>Hello world!</p>
+
+<script >
+
+
+  const userAction = async () => {
+    const response = await fetch('https://rxnav.nlm.nih.gov/REST/interaction/interaction.json?rxcui=834060');
+    const myJson = await response.json(); //extract JSON from the http response
+    console.log('USER ACTION ACTIVATED');
+    console.log(myJson)
+  };
+
+  userAction();
+
+
+</script>
+
+</body>
+</html>
