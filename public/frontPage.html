@@ -11,15 +11,30 @@
 
 <script >
 
+  var code = [207106, 152923, 656659];
 
-  const userAction = async () => {
-    const response = await fetch('https://rxnav.nlm.nih.gov/REST/interaction/interaction.json?rxcui=834060');
+  async function executeSearch (codes) {
+    var codeList = '';
+    var index = 0;
+    while (index < codes.length) {
+      if (index < codes.length - 1) {
+        codeList += codes[index] + '+';
+      }
+      else {
+        codeList += codes[index];
+      }
+      index++;
+    }
+
+    console.log (codeList);
+
+    const response = await fetch('https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis='+codeList);
     const myJson = await response.json(); //extract JSON from the http response
     console.log('USER ACTION ACTIVATED');
     console.log(myJson)
-  };
+  }
 
-  userAction();
+  executeSearch(code);
 
 
 </script>
