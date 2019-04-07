@@ -1,0 +1,26 @@
+{
+  "name": "panmitre",
+  "version": "1.0.0",
+  "description": "Built as part of MITRE's take home project.",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "http": "^0.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Peter Nolan",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peternolan/pnmitre.git"
+  },
+  "bugs": {
+    "url": "https://github.com/peternolan/pnmitre/issues"
+  },
+  "homepage": "https://github.com/peternolan/pnmitre#readme"
+}
