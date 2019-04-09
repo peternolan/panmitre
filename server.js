@@ -24,8 +24,6 @@ app.listen(port, () => console.log('listening on ' + port));
 app.get('/', function (req, res) {
 
   res.sendFile(path.join(__dirname + '/public/frontPage.html'));
-
-  console.log('AFTER sendFile');
 });
 
 app.get('/getPatients', function (req, res) {
@@ -34,9 +32,6 @@ app.get('/getPatients', function (req, res) {
     if (err) {
       throw err
     }
-
-
-    console.log("console logging "+ JSON.stringify(results.rows));
     //send the data
     send(res, JSON.stringify(results.rows));
   });
@@ -45,17 +40,30 @@ app.get('/getPatients', function (req, res) {
 
 app.post('/getCodes',  bodyParser.json(), function (req, res) {
 
-  client.query('SELECT DISTINCT code FROM medication WHERE patient = \'' + req.body["patient"] +'\'', (err, results) => {
+  console.log('getCodes');
+  client.query('SELECT DISTINCT overlap.code FROM (SELECT m1.* FROM medication m1 ' +
+    'INNER JOIN medication m2 ON m2.start > m1.start ' +
+    'AND m2.start < m1.stop OR m2.stop IS NULL) AS overlap ' +
+    'WHERE patient = \'' + req.body["patient"] + '\'', (err, results) => {
     if (err) {
       throw err
     }
-
-    console.log("console logging "+ JSON.stringify(results.rows));
     //send the data
     send(res, JSON.stringify(results.rows));
   });
 
+});
 
+app.post('/getName',  bodyParser.json(), function (req, res) {
+
+  console.log('getName');
+  client.query('SELECT prefix, first, last, suffix FROM patients WHERE id = \'' + req.body["patient"] +'\'', (err, results) => {
+    if (err) {
+      throw err
+    }
+    //send the data
+    send(res, JSON.stringify(results.rows));
+  });
 
 });
 
