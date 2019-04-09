@@ -11,9 +11,14 @@
 
 <script >
 
-  var code = [207106, 152923, 656659];
+  var patient_arr = [];
+  var code_arr = [];
+
+
+  getPatients();
 
   async function executeSearch (codes) {
+
     var codeList = '';
     var index = 0;
     while (index < codes.length) {
@@ -34,7 +39,51 @@
     console.log(myJson)
   }
 
-  executeSearch(code);
+  function getPatients() {
+
+    let xml = new XMLHttpRequest();
+
+    console.log('getPatientIds');
+    xml.open('GET', '/getPatients');
+    xml.responseType = 'json';
+    xml.onload = function() {
+
+        patient_arr = xml.response;
+        for (var i in patient_arr) {
+          var object = patient_arr[i];
+          getCodes(object)
+        }
+
+    };
+
+    xml.send();
+
+  }
+
+  function getCodes(patient) {
+    console.log(patient);
+    let xml = new XMLHttpRequest();
+    xml.open('POST', '/getCodes');
+    xml.setRequestHeader('Content-Type', 'application/json');
+    xml.responseType = 'json';
+    xml.onload = function() {
+      code_arr = xml.response;
+      var codes = [];
+
+      for (var i in code_arr) {
+        var object = code_arr[i];
+        codes.push(object["code"]);
+
+      }
+
+      executeSearch(codes);
+
+
+    };
+    xml.send(JSON.stringify(patient));
+
+  }
+
 
 
 </script>
