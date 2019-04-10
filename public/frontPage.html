@@ -7,7 +7,7 @@
 <body>
 
 <!--  -->
-<p>Hello world!</p>
+<p>Hello MITRE!</p>
 
 <div id ="resultsHere">
 
@@ -62,8 +62,12 @@
 
           var object = xml.response;
           var string = object;
-          console.log("Prefix: " + string[0]["prefix"] + " First Name: " + string[0]["first"] + " Second Name: " + string[0]["last"]);
-          //name_arr.push(object)
+          console.log("Prefix: " + string[0]["prefix"] + " First Name: " + string[0]["first"] + " Last Name: " + string[0]["last"]);
+
+          var send = { prefix: string[0]["prefix"], first: string[0]["first"], last: string[0]["last"]};
+
+          name_arr.push(send)
+          buildNames(name_arr);
         };
 
         xml.send(JSON.stringify(patient));
@@ -137,6 +141,28 @@
     xml.send(JSON.stringify(patient));
 
   }
+
+  function buildNames( name_arr ) {
+
+    //var results_html = `${
+    for (var i in name_arr) {
+      var results_html = `${
+        name_arr.map(name =>
+          `<div >
+                <span>${name.prefix}</span> |
+                <span>${name.first}</span> |
+                <span>${name.last}</span> |
+           </div>`
+        ).join('')
+        }`;
+
+      document.getElementById('resultsHere').innerHTML = results_html;
+    }
+    //}`;
+    //console.log(results_html);
+    //document.getElementById('resultsHere').innerHTML = results_html;
+  }
+
 
 </script>
 
