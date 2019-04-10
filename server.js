@@ -8,11 +8,24 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require("body-parser");
 var app = express();
-var pg = require('pg');
-var conString = "postgres://testing:test@localhost:5432/mitreDB";
+//var conString = "postgres://testing:test@localhost:5432/mitreDB";
+const {Pool} = require('pg');
 
-var client = new pg.Client(conString);
-client.connect();
+const client = Pool ({
+  user: 'hzzscgzldaknyj',
+  host: 'ec2-50-17-246-114.compute-1.amazonaws.com',
+  database: 'ddmq73cim5gso2',
+  password: '812b0b48e847c7f7e432d515934a5f6a6515d38f41c06cf14b6c44a1aa9a1a13',
+  ssl: true,
+});
+//Error report
+client.on('error', (err) => {
+
+  console.error('Unexpected error on idle client', err);
+  process.exitPointerLock()
+
+});
+
 
 function send (res, content) {
   res.writeHead(200, {'Content-Type' : 'text/html'});
@@ -72,7 +85,7 @@ app.post('/getCodes',  bodyParser.json(), function (req, res) {
  */
 app.post('/getName',  bodyParser.json(), function (req, res) {
   console.log("getName");
-  client.query('SELECT prefix, first, last, suffix FROM patients WHERE id = \'' + req.body["patient"] +'\'', (err, results) => {
+  client.query('SELECT prefix, first, last, suffix FROM patient WHERE id = \'' + req.body["patient"] +'\'', (err, results) => {
     if (err) {
       throw err
     }
