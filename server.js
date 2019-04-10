@@ -53,10 +53,11 @@ app.get('/getPatients', function (req, res) {
  */
 app.post('/getCodes',  bodyParser.json(), function (req, res) {
   console.log('getCodes');
-  client.query('SELECT DISTINCT code FROM (SELECT DISTINCT m1.* ' +
-    'FROM medication m1 INNER JOIN medication m2 ON ((m2.start > m1.start ' +
-    'AND m2.start < m1.stop) AND (m1.encounter = m2.encounter))) AS overlap' +
-    ' WHERE patient = \'' + req.body["patient"] + '\';', (err, results) => {
+  //console.log(req.body["patient"]);
+
+  client.query('SELECT DISTINCT overlap.code FROM (SELECT DISTINCT m1.* ' +
+    'FROM medication m1 INNER JOIN medication m2 ON (((m2.start > m1.start AND m2.start < m1.stop) OR (m2.stop IS NULL)) AND (m1.encounter = m2.encounter))) AS overlap ' +
+    ' WHERE patient = \'' + req.body["patient"] + '\' GROUP BY overlap.code HAVING COUNT(code) > 1;', (err, results) => {
     if (err) {
       throw err
     }
@@ -70,12 +71,7 @@ app.post('/getCodes',  bodyParser.json(), function (req, res) {
  * have confirmed have had drug-drug interactions
  */
 app.post('/getName',  bodyParser.json(), function (req, res) {
-  console.log('getName');
-  if (req.body["patient"] === '22ab8c28-3e4b-4f59-bbfa-42d22fba7820' ) {
-    console.log(req.body["patient"]);
-  }
-
-
+  console.log("getName");
   client.query('SELECT prefix, first, last, suffix FROM patients WHERE id = \'' + req.body["patient"] +'\'', (err, results) => {
     if (err) {
       throw err
